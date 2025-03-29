@@ -1,2 +1,2 @@
 # To-do-project
-Using fastAPI and SQLAlchemy.
+Using fastAPI, Sqlite and SQLAlchemy.
