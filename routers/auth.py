@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from fastapi import  APIRouter
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -8,10 +9,16 @@ from database import SessionLocal
 from starlette import status
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
+from jose import jwt
 
 router=APIRouter()
 
-bcrypt_context= CryptContext(schemes=['bcrypt'], deprecated='auto')
+SECRET_KEY ='1d21650692b81a27176e760c291d93cf0c81b8fdb15c542f49aa9ff537c011c7'
+ALGORITHM='HS256'
+
+
+#bcrypt_context= CryptContext(schemes=['bcrypt'], deprecated='auto')
+bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class CreateUserRequest(BaseModel):
@@ -21,6 +28,10 @@ class CreateUserRequest(BaseModel):
     last_name: str
     password: str
     role: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
 def get_db():
@@ -35,12 +46,24 @@ db_dependency=Annotated[Session, Depends(get_db)]
 
 def authenticate_user(username: str, password: str, db):
     user= db.query(Users).filter(Users.username==username).first()
+    
+    print(f"Stored hash: {user.hashed_password}")
+
+    print(f"assssssss : {bcrypt_context.verify(password, user.hashed_password)}")
+
     if not user:
         return False
-    if not bcrypt_context.verify(password, Users.hashed_password):
+    if not bcrypt_context.verify(password, user.hashed_password):
         return False
-    return True
+    return user
 
+
+
+def create_access_token(username: str, user_id: int, expires_delta:timedelta):
+    encode ={'sub': username, 'id': user_id}
+    expires=datetime.now(timezone.utc) + expires_delta
+    encode.update({'exp': expires})
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 
@@ -60,9 +83,10 @@ async def create_user(db:db_dependency,
     db.commit()
 
 
-@router.post("/token")
+@router.post("/token", response_model=Token)
 async def login_for_acces_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
     user= authenticate_user(form_data.username, form_data.password, db)
     if not user:
         return 'Failed authentication'
-    return 'Succesful authenticationken'
+    token=create_access_token(user.username, user.id, timedelta(minutes=20))
+    return {'access_token': token, 'token_type': 'bearer'}
