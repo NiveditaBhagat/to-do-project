@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, Path
 from models import Todos
 from starlette import status
-from database import SessionLocal, get 
+from database import SessionLocal
 from .auth import get_current_user
 
 router= APIRouter()
@@ -38,9 +38,9 @@ class TodoRequest(BaseModel):
     
 
 @router.get("/",status_code=status.HTTP_200_OK)
-async def read_all(db :db_dependency ): 
+async def read_all(user: user_dependency, db :db_dependency ): 
     # Depends is dependency injection. It really means that we need to do something before we execute what we're trying to execute.
-    return db.query(Todos).all()
+    return db.query(Todos).filter(Todos.owner_id==user.get('id')).all()
 
 # So we currently are able to now fetch all the information from our database because we are using dependency injection to go ahead and grab and run first.
 
