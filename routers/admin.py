@@ -1,0 +1,34 @@
+from typing import Annotated
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Path
+from models import Todos
+from starlette import status
+from database import SessionLocal
+from .auth import get_current_user
+
+router= APIRouter(
+     prefix='/admin',
+    tags=['admin']
+)
+
+
+# models.Base.metadata.create_all(bind=engine) # this will create everything from database.py file and models.py file to be able to create a new database that has a new table of todos with
+# all the columns that we led out in models.py file
+# models.Base.metadata.create_all(bind=engine) this will only be ran if our todos.db doesnt exist
+# This line ensures that the database tables are created based on the models defined in models.py. If the database (todos.db) doesn’t exist, it will automatically create the necessary tables.
+
+
+
+def get_db():
+    db= SessionLocal() # Creates a new database session
+    try:
+        yield db  # Returns the session for use in request handlers
+        # yeild means only the code prior to and including yeild statement is executed before sending response.The code following the yeild statement is executed after the response has been delivered.
+    finally:
+        db.close() # Closes the session after request is complete
+
+# This makes fast api quicker because we can fetch information from a database, return it to the client and then close off the connection to the database after.
+
+db_dependency=Annotated[Session, Depends(get_db)]
+user_dependency= Annotated[dict, Depends(get_current_user)]
