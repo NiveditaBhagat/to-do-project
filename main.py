@@ -4,7 +4,7 @@ import models
 
 
 from database import engine, SessionLocal
-from routers import auth, todos
+from routers import auth, todos, admin
 
 app=FastAPI()
 
@@ -17,3 +17,5 @@ models.Base.metadata.create_all(bind=engine)  # this will create everything from
 
 app.include_router(auth.router)
 app.include_router(todos.router) 
+app.include_router(todos.router)
+
