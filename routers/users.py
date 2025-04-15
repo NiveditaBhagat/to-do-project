@@ -42,6 +42,8 @@ class UserVerification(BaseModel):
 
 
 
+
+
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_users(db: db_dependency, user: user_dependency):
     if user is None :
