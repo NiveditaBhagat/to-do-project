@@ -2,7 +2,6 @@
 from fastapi import FastAPI
 import models 
 
-
 from database import engine, SessionLocal
 from routers import auth, todos, admin, users
 
