@@ -14,6 +14,7 @@ models.Base.metadata.create_all(bind=engine)  # this will create everything from
 # This line ensures that the database tables are created based on the models defined in models.py. If the database (todos.db) doesn’t exist, it will automatically create the necessary tables.
 
 
+
 app.include_router(auth.router)
 app.include_router(todos.router) 
 app.include_router(admin.router)
