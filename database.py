@@ -2,11 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base # for creating database object
 
-SQLALCHEMY_DATABASE_URL='sqlite:///./todosapp.db' 
+SQLALCHEMY_DATABASE_URL='postgresql://niveditabhagat:test1234!@localhost/TodoApplicationDatabase' 
 # This is url is going to be used to create the location of this database on our project.
 #  Create an engine for our application. Database engine is something that we can use to able to open up a connection and be able to use our database.
 
-engine=create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False}) 
+engine=create_engine(SQLALCHEMY_DATABASE_URL) 
 #connect_args are arguments that we can pass into our engine, which will allow us to be able to define some kind of connection to the database
 # By default SQLite will allow only one threa to communicate with it.Assuming that each threa will handle an independent request.
 # This is to prevent any kind of accident sharing of the same connection for different kind of request.

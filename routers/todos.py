@@ -42,7 +42,7 @@ async def read_all(user: user_dependency, db :db_dependency ):
     # Depends is dependency injection. It really means that we need to do something before we execute what we're trying to execute.
     if user is None:
         raise HTTPException(status_code=401,detail='Authentication failed')
-    return db.query(Todos).filter(Todos.ownner_id==user.get('id')).all()
+    return db.query(Todos).filter(Todos.owner_id==user.get('id')).all()
 
 # So we currently are able to now fetch all the information from our database because we are using dependency injection to go ahead and grab and run first.
 
@@ -50,7 +50,7 @@ async def read_all(user: user_dependency, db :db_dependency ):
 async def read_todo(user: user_dependency, db:db_dependency,todo_id: int=Path(gt=0) ):
     if user is None:
         raise HTTPException(status_code=401,detail='Authentication failed')
-    todo_model=db.query(Todos).filter(Todos.id==todo_id).filter(Todos.ownner_id==user.get('id')).first()
+    todo_model=db.query(Todos).filter(Todos.id==todo_id).filter(Todos.owner_id==user.get('id')).first()
     if todo_model is not None:
         return todo_model
     raise HTTPException(status_code=404, detail='Todo not found.')
@@ -60,7 +60,7 @@ async def read_todo(user: user_dependency, db:db_dependency,todo_id: int=Path(gt
 async def create_todo(user: user_dependency, db:db_dependency,todo_request: TodoRequest):
     if user is None:
         raise HTTPException(status_code=401,detail='Authentication failed')
-    todo_model= Todos(**todo_request.model_dump(), ownner_id=user.get('id'))
+    todo_model= Todos(**todo_request.model_dump(), owner_id=user.get('id'))
     db.add(todo_model)
     db.commit()
 
@@ -72,7 +72,7 @@ async def update_todo(user: user_dependency, db: db_dependency,
                       ):
     if user is None:
         raise HTTPException(status_code=401,detail='Authentication failed')
-    todo_model= db.query(Todos).filter(todo_id==Todos.id).filter(Todos.ownner_id==user.get('id')).first()
+    todo_model= db.query(Todos).filter(todo_id==Todos.id).filter(Todos.owner_id==user.get('id')).first()
     if todo_model is None:
         raise HTTPException(status_code=404,detail='Todo not found.')
     
@@ -89,10 +89,10 @@ async def update_todo(user: user_dependency, db: db_dependency,
 async def delete_todo(user: user_dependency, db: db_dependency,todo_id: int=Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=401,detail='Authentication failed')
-    todo_model=db.query(Todos).filter(Todos.id==todo_id).filter(Todos.ownner_id==user.get('id')).first()
+    todo_model=db.query(Todos).filter(Todos.id==todo_id).filter(Todos.owner_id==user.get('id')).first()
     if todo_model is None:
         raise HTTPException(status_code= 404, detail='Todo not found.')
-    db.query(Todos).filter(Todos.id==todo_id).filter(Todos.ownner_id==user.get('id')).delete()
+    db.query(Todos).filter(Todos.id==todo_id).filter(Todos.owner_id==user.get('id')).delete()
 
     db.commit()
 
