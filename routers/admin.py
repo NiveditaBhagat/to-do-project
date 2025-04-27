@@ -33,6 +33,8 @@ db_dependency=Annotated[Session, Depends(get_db)]
 user_dependency= Annotated[dict, Depends(get_current_user)]
 
 
+
+
 @router.get("/todo", status_code=status.HTTP_200_OK)
 async def get_todos(db: db_dependency, user: user_dependency):
     if user is None or user.get('user_role')!='admin':
