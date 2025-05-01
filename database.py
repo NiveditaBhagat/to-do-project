@@ -2,6 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base # for creating database object
 
+
+
+
 #SQLALCHEMY_DATABASE_URL='postgresql://niveditabhagat:test1234!@localhost/TodoApplicationDatabase' 
 SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:Nivedita%40220901@127.0.0.1:3306/TodoApplicationDatabase'
 # This is url is going to be used to create the location of this database on our project.
