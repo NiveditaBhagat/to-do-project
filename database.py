@@ -5,8 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base # for creating database 
 
 
 
-#SQLALCHEMY_DATABASE_URL='postgresql://niveditabhagat:test1234!@localhost/TodoApplicationDatabase' 
-SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:Nivedita%40220901@127.0.0.1:3306/TodoApplicationDatabase'
+SQLALCHEMY_DATABASE_URL='postgresql://niveditabhagat:test1234!@localhost/TodoApplicationDatabase' 
+#SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:Nivedita%40220901@127.0.0.1:3306/TodoApplicationDatabase'
 # This is url is going to be used to create the location of this database on our project.
 #  Create an engine for our application. Database engine is something that we can use to able to open up a connection and be able to use our database.
 
