@@ -16,6 +16,7 @@ class Users(Base):
      hashed_password= Column(String)
      is_active= Column(Boolean, default=True)
      role= Column(String)
+     phone_number=Column(String)
 
 class Todos(Base):
     __tablename__='todos' # now this is just a way for SQL alchemy to know what to name this table inside our database later on.
